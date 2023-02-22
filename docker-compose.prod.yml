@@ -35,7 +35,7 @@ services:
       # explicitly tell Traefik to expose this container
       - 'traefik.enable=true'
       # specify the rule used to match a request to this service
-      - 'traefik.http.routers.backend.rule=Host(`112.171.37.53`) && PathPrefix(`/api`)'
+      - 'traefik.http.routers.backend.rule=Host(`211.178.39.246`) && PathPrefix(`/api`)'
       # allow request only from the predefined entry point named "web"
       - 'traefik.http.routers.backend.entrypoints=web'
       # set port the container listens to
@@ -56,7 +56,7 @@ services:
       # explicitly tell Traefik to expose this container
       - 'traefik.enable=true'
       # specify the rule used to match a request to this service
-      - 'traefik.http.routers.frontend.rule=Host(`112.171.37.53`)'
+      - 'traefik.http.routers.frontend.rule=Host(`211.178.39.246`)'
       # allow request only from the predefined entry point named "web"
       - 'traefik.http.routers.frontend.entrypoints=web'
       # set port the container listens to
