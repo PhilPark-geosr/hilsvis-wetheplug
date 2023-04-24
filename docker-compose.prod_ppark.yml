@@ -1,0 +1,91 @@
+version: '3.9'
+
+services:
+  ###########################
+  #   traefik container
+  ###########################
+  traefik:
+    # pull the official v2 Traefik docker image
+    image: 'traefik:v2.9'
+    command:
+      # enable Docker in Traefik, so that it reads labels from Docker services
+      - '--providers.docker=true'
+      # do not expose all containers unless explicitly told so
+      - '--providers.docker.exposedbydefault=false'
+      # traefik will listen to incoming request on the port 8080 (HTTP)
+      - '--entrypoints.web.address=:8080'
+    ports:
+      - '8080:8080'
+    volumes:
+      # add Docker as a mounted volume, so that Traefik can read the labels of other services
+      - '/var/run/docker.sock:/var/run/docker.sock:ro'
+
+  ###########################
+  #   backend container
+  ###########################
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    # command: uvicorn app.api.server:app --host 0.0.0.0 --port 8000
+    command: gunicorn app.api.server:app --workers 4 --worker-class uvicorn.workers.UvicornWorker --bind 0.0.0.0:8000
+    env_file:
+      - ./backend/.env
+    labels:
+      # explicitly tell Traefik to expose this container
+      - 'traefik.enable=true'
+      # specify the rule used to match a request to this service
+      - 'traefik.http.routers.backend.rule=Host(`211.178.39.246`) && PathPrefix(`/api`)'
+      # allow request only from the predefined entry point named "web"
+      - 'traefik.http.routers.backend.entrypoints=web'
+      # set port the container listens to
+      - 'traefik.http.services.backend.loadbalancer.server.port=8000'
+      # enable gzip compression
+      #- 'traefik.http.middlewares.backend.compress=true'
+      # specify the minimum amount of bytes that must be compressed
+      #- 'traefik.http.middlewares.backend.compress.minresponsebodybytes=10240'
+  
+  ###########################
+  #   backend container2
+  ###########################
+  backend2:
+    build:
+      context: ./backend_ppark
+      dockerfile: Dockerfile
+    command: uvicorn main:app --host 0.0.0.0 --port 8001 --reload
+    volumes:
+      # hostPath:containerPath:mode
+      - ./backend_ppark:/backend_ppark:consistent
+    # env_file:
+    #   - ./backend_ppark/.env
+    labels:
+      # explicitly tell Traefik to expose this container
+      - 'traefik.enable=true'
+      # specify the rule used to match a request to this service
+      - 'traefik.http.routers.backend2.rule=Host(`211.178.39.246`) && PathPrefix(`/api2`)'
+      # allow request only from the predefined entry point named "web"
+      - 'traefik.http.routers.backend2.entrypoints=web'
+      # set port the container listens to
+      - 'traefik.http.services.backend2.loadbalancer.server.port=8001'
+      # enable gzip compression
+      #- 'traefik.http.middlewares.backend.compress=true'
+      # specify the minimum amount of bytes that must be compressed
+      #- 'traefik.http.middlewares.backend.compress.minresponsebodybytes=10240'
+  ###########################
+  #   frontend container
+  ###########################
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile-prod
+    labels:
+      # explicitly tell Traefik to expose this container
+      - 'traefik.enable=true'
+      # specify the rule used to match a request to this service
+      - 'traefik.http.routers.frontend.rule=Host(`211.178.39.246`)'
+      # allow request only from the predefined entry point named "web"
+      - 'traefik.http.routers.frontend.entrypoints=web'
+      # set port the container listens to
+      - 'traefik.http.services.frontend.loadbalancer.server.port=3000'
+    depends_on:
+      - backend

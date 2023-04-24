@@ -2,6 +2,8 @@ export default `\
 #define SHADER_NAME grid-point-layer-vertex-shader
 
 attribute vec3 positions;
+
+attribute vec4 instanceColors;
 attribute vec3 instancePositions;
 attribute vec3 instancePositions64Low;
 
@@ -20,6 +22,7 @@ void main(void){
 
   // find the center of the point and add the current vertex
   vec3 offset = vec3(positions.xy * project_size_to_pixel(radiusPixels, 2), 0.0);
+  
   gl_Position = project_position_to_clipspace(instancePositions, instancePositions64Low, vec3(0.), geometry.position);
   gl_Position.xy += project_pixel_size_to_clipspace(offset.xy);
 

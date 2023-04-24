@@ -8,13 +8,7 @@ import DialogDangerLayerTable from '../dialog/DialogDangerLayerTable';
 
 // MUI
 import { IconButton, ListItem, ListItemButton, ListItemText } from '@mui/material';
-import {
-  DeleteRounded,
-  VisibilityRounded,
-  VisibilityOffRounded,
-  TableRowsRounded,
-  ArrowDropDownCircleRounded,
-} from '@mui/icons-material';
+import { DeleteRounded, TableRowsRounded, ArrowDropDownCircleRounded } from '@mui/icons-material';
 
 const sxListPriTypo = { fontSize: 11, lineHeight: '15px' };
 const sxListSecTypo = {
@@ -53,9 +47,6 @@ const MenuDrawerDangerLayerListItem = ({ typhoon: { typhoon_id, typhoon_name } }
           <IconButton onClick={toggleDialog}>
             <TableRowsRounded />
           </IconButton>
-          {/* <IconButton>
-            <VisibilityRounded />
-          </IconButton> */}
           <IconButton>
             <ArrowDropDownCircleRounded />
           </IconButton>

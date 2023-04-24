@@ -20,7 +20,6 @@ const Menu = () => {
       <Fab
         sx={{
           position: 'absolute',
-          // borderRadius: 0,
           top: '15px',
           left: open ? '410px' : '15px',
           transition: '0.5s all',

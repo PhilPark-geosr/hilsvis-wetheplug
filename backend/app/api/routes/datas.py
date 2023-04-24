@@ -76,7 +76,7 @@ async def get_data_wkb_for_a_specific_time(
 
 
 # Raster data selection for a specific time (As PNG)
-""" @router.get(
+@router.get(
     "/png/{dataset_id}/var/{var_name}/time/{time_id}",
     name="datapng:get-data-for-a-specific-time",
     response_class=Response,
@@ -105,4 +105,4 @@ async def get_data_png_for_a_specific_time(
             detail="조건에 해당하는 데이터가 없습니다.",
         )
 
-    return Response(content=data, media_type="image/png") """
+    return Response(content=data, media_type="image/png")

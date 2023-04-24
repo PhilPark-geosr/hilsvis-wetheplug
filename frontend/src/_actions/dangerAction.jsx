@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-// Get all typhoons
+// get all typhoons
 export const getAllTyphoons = () => async (dispatch) => {
   try {
     const res = await axios.get('/api/typhoon');
@@ -18,7 +18,7 @@ export const getAllTyphoons = () => async (dispatch) => {
   }
 };
 
-// Select typhoons
+// select typhoons
 export const selectTyphoons = (rows) => async (dispatch) => {
   try {
     // add paths to each typhoon
@@ -38,7 +38,7 @@ export const selectTyphoons = (rows) => async (dispatch) => {
   }
 };
 
-// Deselect layer by id
+// deselect layer by id
 export const deselectTyphoonByTyphoonId = (id) => async (dispatch) => {
   try {
     dispatch({
@@ -50,7 +50,7 @@ export const deselectTyphoonByTyphoonId = (id) => async (dispatch) => {
   }
 };
 
-// Get paths by typhoon
+// get paths by typhoon
 export const getPathsByTyphoon = () => async (dispatch) => {
   try {
     dispatch({
@@ -61,7 +61,7 @@ export const getPathsByTyphoon = () => async (dispatch) => {
   }
 };
 
-// Get typhoon paths by typhoon id
+// get typhoon paths by typhoon id
 /* export const getAllPathsByTyphoonId = (typhoonId) => async (dispatch) => {
   try {
     const res = await axios.get(`/api/path/${typhoonId}`);

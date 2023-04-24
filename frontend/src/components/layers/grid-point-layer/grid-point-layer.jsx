@@ -14,6 +14,8 @@ const defaultProps = {
   radiusPixels: { type: 'number', min: 0, value: 10 },
   // Center of each circle, in [longitude, latitude, (z)]
   getPosition: { type: 'accessor', value: (d) => d.position },
+  // Color of each circle, in [R, G, B, (A)]
+  getColor: { type: 'accessor', value: DEFAULT_COLOR },
 };
 
 export default class GridPointLayer extends Layer {
@@ -26,11 +28,8 @@ export default class GridPointLayer extends Layer {
   }
 
   initializeState() {
-    // get the AttributeManager
-    const attributeManager = this.getAttributeManager();
-
     // register attributes
-    attributeManager().addInstanced({
+    this.getAttributeManager().addInstanced({
       /* this attribute is automatically filled by the return value of `props.getPosition` */
       instancePositions: {
         size: 3, //
@@ -38,6 +37,7 @@ export default class GridPointLayer extends Layer {
         f64: this.use64bitPositions(),
         accessor: 'getPosition',
       },
+      /* this attribute is automatically filled by the return value of `props.getColor` */
       instanceColor: {
         size: 4, // RGBA
         type: GL.UNSIGNED_BYTE,
@@ -46,13 +46,21 @@ export default class GridPointLayer extends Layer {
         defaultValue: DEFAULT_COLOR,
       },
     });
+
+    // get an access to a WebGL context
+    const { gl } = this.context;
+
+    // save the model in the layer state
+    this.setState({
+      model: this._getModel(gl),
+    });
   }
 
   updateState(params) {
+    super.updateState(params);
+
     // destructure
     const { props, oldProps, changeFlags } = params;
-    console.log(props.extensions);
-    console.log(oldProps.extensions);
 
     // set up model first
     if (changeFlags.extensionsChanged) {
@@ -60,7 +68,7 @@ export default class GridPointLayer extends Layer {
         this.state.model.delete();
       }
       const { gl } = this.context;
-      this.setState({ model: this._getModel(gl) });
+      this.state.model = this._getModel(gl);
       this.getAttributeManager().invalidateAll();
     }
   }

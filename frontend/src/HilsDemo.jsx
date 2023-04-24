@@ -17,6 +17,7 @@ import { SimpleMeshLayer } from '@deck.gl/mesh-layers';
 // Deck.gl custom layers
 import RasterLayer from './components/layers/raster-layer/raster-layer';
 import CurrentVectorFieldLayer from './components/layers/current-vector-field-layer/current-vector-field-layer';
+import GridPointLayer from './components/layers/grid-point-layer/grid-point-layer';
 
 // Constant
 import { EARTH_RADIUS_METERS } from './constants/Constants';
@@ -90,15 +91,17 @@ class HilsDemo extends React.Component {
     // destructure props
     const {
       viewport,
-      // 위험사례 모델정보 관련
+      // 위험사례 모델 관련
       scalar_variable,
       sband,
       vector_variable,
       mband,
       mband_data,
       opacity,
-      // 위험사례 관측정보 관련
+      // 위험사례 관측 관련
       typhoons_selected,
+      // 해양특성 관련
+      characteristic_layers,
       // 디스플레이 관련
       view,
       basemap,
@@ -138,10 +141,10 @@ class HilsDemo extends React.Component {
           opacity: opacity / 100,
           // [minX, minY, maxX, maxY]
           imageBounds: [
-            sband.metadata.ipX,
-            sband.metadata.ipY,
-            sband.metadata.ipX + sband.metadata.scaleX * sband.metadata.width,
-            sband.metadata.ipY + sband.metadata.scaleY * sband.metadata.height,
+            sband.metadata.ipX, // minX
+            sband.metadata.ipY, // minY
+            sband.metadata.ipX + sband.metadata.scaleX * sband.metadata.width, // maxX
+            sband.metadata.ipY + sband.metadata.scaleY * sband.metadata.height, // maxY
           ],
           // [width, height]
           imageTextureSize: [sband.metadata.width, sband.metadata.height],
@@ -174,6 +177,18 @@ class HilsDemo extends React.Component {
           getColor: [255, 255, 255, 255], // white
         }),
 
+      // Object.keys(mband).length !== 0 &&
+      //   mband_data.length !== 0 &&
+      //   vector_variable.var_name !== 'none' &&
+      //   new GridPointLayer({
+      //     id: 'grid-point',
+      //     data: mband_data,
+      //     opacity: 1,
+      //     radiusPixels: 3,
+      //     getPosition: (d) => d.position,
+      //     getColor: [0, 0, 0, 255], // black
+      //   }),
+
       // if typhoons_selected.length > 0, create GeoJson layer(s)
       typhoons_selected.length > 0 &&
         // for each typhoon
@@ -188,6 +203,31 @@ class HilsDemo extends React.Component {
             pickable: true,
             filled: true,
             getFillColor: [255, 255, 255, 255], // white
+            pointType: 'circle',
+            lineWidthScale: 10,
+            lineWidthMinPixels: 2,
+            stroked: true,
+            getLineColor: [0, 0, 255, 255], // blue
+            getPointRadius: 2,
+            pointRadiusUnits: 'pixels',
+            getLineWidth: 5,
+          });
+        }),
+
+      // characteristics
+      characteristic_layers.length > 0 &&
+        // for each layer
+        characteristic_layers.map((item) => {
+          // geojson data
+          const data = item.geometry;
+
+          // create GeoJson layer(s)
+          return new GeoJsonLayer({
+            id: `characteristic-layer-${item.name}`,
+            data: data,
+            pickable: true,
+            filled: true,
+            getFillColor: [0, 0, 0, 0], // black
             pointType: 'circle',
             lineWidthScale: 10,
             lineWidthMinPixels: 2,
@@ -233,8 +273,10 @@ const mapStateToProps = (state) => ({
   // display
   basemap: state.display.basemap,
   view: state.display.view,
-  // danger; typhoon
+  // danger
   typhoons_selected: state.danger.typhoons_selected,
+  // characteristics
+  characteristic_layers: state.characteristic.characteristic_layers,
 });
 
 export default connect(mapStateToProps)(HilsDemo);

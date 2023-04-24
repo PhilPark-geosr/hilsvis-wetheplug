@@ -1,2 +1,15 @@
 node_modules/
 .env
+
+poetry.lock
+pyproject.toml
+requirements.txt
+*.csv
+*.mp4
+shp
+shp_temp
+shapefiles.zip
+shapefiles
+__pycache__
+info
+csv

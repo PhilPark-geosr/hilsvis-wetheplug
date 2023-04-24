@@ -7,6 +7,8 @@ import { Drawer, Box, Tabs, Tab } from '@mui/material';
 // Components
 import MenuDrawerDataset from './MenuDrawerDataset';
 import MenuDrawerDanger from './MenuDrawerDanger';
+import MenuDrawerCondition from './MenuDrawerCondition';
+import MenuDrawerCharacteristic from './MenuDrawerCharacteristic';
 
 const sxDrawer = {
   flexShrink: 0,
@@ -55,8 +57,8 @@ const MenuDrawer = ({ open, toggleDrawer }) => {
           >
             <Tab wrapped label='위험사례(모델)' />
             <Tab wrapped label='위험사례(관측)' />
-            <Tab wrapped disabled label='해양상태' />
-            <Tab wrapped disabled label='해역특성' />
+            <Tab wrapped label='해역특성' />
+            <Tab wrapped label='해양상태' />
           </Tabs>
         </Box>
         <TabPanel value={value} index={0}>
@@ -65,8 +67,12 @@ const MenuDrawer = ({ open, toggleDrawer }) => {
         <TabPanel value={value} index={1}>
           <MenuDrawerDanger />
         </TabPanel>
-        <TabPanel value={value} index={2}></TabPanel>
-        <TabPanel value={value} index={3}></TabPanel>
+        <TabPanel value={value} index={2}>
+          <MenuDrawerCharacteristic />
+        </TabPanel>
+        <TabPanel value={value} index={3}>
+          <MenuDrawerCondition />
+        </TabPanel>
       </Box>
     </Drawer>
   );

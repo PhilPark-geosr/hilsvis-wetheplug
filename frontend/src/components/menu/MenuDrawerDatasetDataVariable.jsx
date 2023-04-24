@@ -181,7 +181,7 @@ const MenuDrawerDatasetDataVariable = () => {
           value={vector_variable.var_name}
           onChange={handleUpdateVectorVariable}
         >
-          <ToggleButton value='uv'>표층 해류</ToggleButton>
+          <ToggleButton value='uv'>표층해류</ToggleButton>
           <ToggleButton value='wind' disabled>
             바람
           </ToggleButton>
