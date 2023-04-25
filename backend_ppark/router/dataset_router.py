@@ -19,9 +19,10 @@ router = APIRouter(
     prefix='/api2',
     tags= ['api2']
 )
-@router.get("") #이렇게 맨끝 슬래쉬를 지워줘야 된다!
-def api():
-    return "api"
+# @router.get("") #이렇게 맨끝 슬래쉬를 지워줘야 된다!
+# def api():
+#     return "api"
+
 @router.get('/tide_station')
 def get_station(number : str, db:Session=Depends(get_db)):
     return db_tide_current.get_station(db,number)
@@ -56,17 +57,18 @@ def get_tide_current_all(
     header = response.headers
     return db_tide_current.get_tide_current_all(db, header)
 
-@router.get('/witheader')
-def get_headers(response:Response,
-                custom_header : Optional[List[str]] = Header(None),
-                test_cookie : Optional[str] = Cookie(None)
-                ):
-    response.headers['custom_response_header'] ="and".join(custom_header)
-    response.set_cookie(key='test_cookie', value = "nice")
-    return {
-        'custom_header' : custom_header,
-        'my_cookie': test_cookie,
-    }
+# TODO: 헤더 보내서 요청 보낼경우 대비
+# @router.get('/witheader')
+# def get_headers(response:Response,
+#                 custom_header : Optional[List[str]] = Header(None),
+#                 test_cookie : Optional[str] = Cookie(None)
+#                 ):
+#     response.headers['custom_response_header'] ="and".join(custom_header)
+#     response.set_cookie(key='test_cookie', value = "nice")
+#     return {
+#         'custom_header' : custom_header,
+#         'my_cookie': test_cookie,
+#     }
 
 
 @router.get('/{type}')
