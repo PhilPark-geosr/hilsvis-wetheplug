@@ -4,7 +4,7 @@ from db.database import Base, engines
 from router import dataset_router, characteristic_router
 
 app = FastAPI(
-        title="ppark_project",
+        title="해양상태/해역특성 API",
         version="0.1",
         docs_url="/api2/docs",
         openapi_url="/api2/openapi.json",
