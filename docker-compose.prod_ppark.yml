@@ -55,7 +55,7 @@ services:
     command: uvicorn main:app --host 0.0.0.0 --port 8001 --reload
     volumes:
       # hostPath:containerPath:mode
-      - ./backend_ppark:/backend_ppark:consistent
+      - ./backend_ppark:/backend:consistent
     # env_file:
     #   - ./backend_ppark/.env
     labels:
