@@ -48,4 +48,4 @@ def get_station(db:Session, number : str):
     
     ## station 에 current 변수가 등록되어 있어서 상호참조 가능
     ## tide_current 테이블의 current 변수를 참조 할 수 있음
-    return station
+    return station.current
